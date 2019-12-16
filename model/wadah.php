@@ -120,7 +120,7 @@ function get_wadah_dropdown()
   try {
     $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
     $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $wadah_all = $con->prepare("SELECT id, jenis, isi FROM wepeak.wadah WHERE delete_at IS NULL");
+    $wadah_all = $con->prepare("SELECT id, jenis, isi FROM wepeak.wadah WHERE deleted_at IS NULL");
     $wadah_all->execute();
     // var_dump($wadah_all);
     $result = $wadah_all->fetchAll();

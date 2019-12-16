@@ -6,10 +6,7 @@ function get_paket_all()
   try {
     $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
     $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $wadah_all = $con->prepare("SELECT jenis_air.nama, wadah.nama FROM wepeak.harga_satuan paket
-
-
-      WHERE deleted_at IS NULL");
+    $wadah_all = $con->prepare("SELECT paket.id, jenis_air.nama AS air, wadah.jenis AS wadah, paket.banyak AS banyak, satuan.satuan AS satuan, paket.harga, paket.created_at, paket.update_at, paket.delete_at FROM harga_satuan paket INNER JOIN jenis_air ON paket.id_air=jenis_air.id INNER JOIN wadah ON paket.id_wadah=wadah.id INNER JOIN satuan ON paket.id_satuan=satuan.id WHERE paket.delete_at IS NULL");
     $wadah_all->execute();
     // var_dump($wadah_all);
     $result = $wadah_all->fetchAll();
@@ -27,7 +24,7 @@ function get_paket_once($id)
     $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
     $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     if (isset($id)) {
-      $wadah = $con->prepare("SELECT * FROM wepeak.harga_satuan WHERE id = :id AND deleted_at IS NULL");
+      $wadah = $con->prepare("SELECT paket.id, paket.id_satuan, paket.id_wadah, paket.id_air, jenis_air.nama AS air, wadah.jenis AS wadah, paket.banyak AS banyak, satuan.satuan AS satuan, paket.harga, paket.created_at, paket.update_at, paket.delete_at FROM harga_satuan paket INNER JOIN jenis_air ON paket.id_air=jenis_air.id INNER JOIN wadah ON paket.id_wadah=wadah.id INNER JOIN satuan ON paket.id_satuan=satuan.id WHERE paket.delete_at IS NULL AND paket.id=:id");
       $wadah->bindParam(':id', $id);
       $wadah->execute();
       $result = $wadah->fetchAll();
@@ -82,6 +79,8 @@ function update_paket($id, $data)
       $statement->bindParam(':id_air', $data['id_air']);
       $statement->bindParam(':id_wadah', $data['id_wadah']);
       $statement->bindParam(':banyak', $data['banyak']);
+      $statement->bindParam(':id_satuan', $data['id_satuan']);
+      $statement->bindParam(':harga', $data['harga']);
       $statement->bindParam(':id', $id);
       // $wadah = $con->query("UPDATE wadah SET jenis=?, isi=?, harga=?, update_at=TIMESTAMP()
       //                       WHERE id = ?");
@@ -102,7 +101,7 @@ function delete_paket($id)
   try {
     $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
     $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $query = "UPDATE wepeak.harga_satuan SET deleted_at = CURRENT_TIMESTAMP() WHERE id = :id ";
+    $query = "UPDATE wepeak.harga_satuan SET delete_at = CURRENT_TIMESTAMP() WHERE id = :id ";
     echo $query;
     $statement = $con->prepare($query);
     if (isset($id)) {

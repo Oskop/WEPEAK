@@ -43,7 +43,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/wepeak/model/jenis_air.php';
                 $_SESSION['flash_message'] = "Jenis air berhasil ditambahkan.";
                 $_SESSION['timer'] = time();
                 echo "<script>var time = setTimeout(function()
-                      {window.location = '/index.php?menu=jenis_air'}, 3);</script>";
+                      {window.location = 'index.php?menu=jenis_air'}, 3);</script>";
               }
                ?>
 
