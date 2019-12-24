@@ -25,37 +25,37 @@ style="background: -webkit-linear-gradient(left, #3931af, #00c6ff);
           </ul>
             <div class="tab-content" id="myTabContent">
               <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                <h3 class="register-heading">Apply as a Employee</h3>
+                <h3 class="register-heading">Daftar Sebagai Pelanggan</h3>
                 <div class="row register-form">
                     <div class="col-md-6">
                       <div class="form-group">
-                        <input type="text" class="form-control" placeholder="First Name *" value="" />
+                        <input type="text" class="form-control" name="nama" placeholder="Nama *" value="" />
                       </div>
                       <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Last Name *" value="" />
+                        <input type="email" class="form-control" name="email" placeholder="Email *" value="" />
                       </div>
                       <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Password *" value="" />
+                        <input type="text" class="form-control" name="no_hp" placeholder="Nomor HP *" value="" />
                       </div>
                       <div class="form-group">
-                        <input type="password" class="form-control"  placeholder="Confirm Password *" value="" />
+                        <textarea  class="form-control" name="alamat"  placeholder="Alamat *" value="" ></textarea>
                       </div>
                       <div class="form-group">
                         <div class="maxl">
                           <label class="radio inline">
-                            <input type="radio" name="gender" value="male" checked>
-                              <span> Male </span>
+                            <input type="radio" name="gender" value="laki-laki" checked>
+                              <span> Laki-Laki </span>
                           </label>
                           <label class="radio inline">
-                            <input type="radio" name="gender" value="female">
-                            <span>Female </span>
+                            <input type="radio" name="gender" value="perempuan">
+                            <span>Perempuan </span>
                           </label>
                         </div>
                       </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <input type="email" class="form-control" placeholder="Your Email *" value="" />
+                            <input type="text" class="form-control" placeholder="Username *" value="" />
                         </div>
                         <div class="form-group">
                             <input type="text" minlength="10" maxlength="10" name="txtEmpPhone" class="form-control" placeholder="Your Phone *" value="" />
