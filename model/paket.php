@@ -18,6 +18,22 @@ function get_paket_all()
 
 }
 
+function show_paket_all()
+{
+  try {
+    $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
+    $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $wadah_all = $con->prepare("SELECT paket.id, jenis_air.nama AS air, jenis_air.ph AS ph, wadah.jenis AS wadah, paket.banyak AS banyak, satuan.satuan AS satuan, paket.harga, paket.created_at, paket.update_at, paket.delete_at FROM harga_satuan paket INNER JOIN jenis_air ON paket.id_air=jenis_air.id INNER JOIN wadah ON paket.id_wadah=wadah.id INNER JOIN satuan ON paket.id_satuan=satuan.id WHERE paket.delete_at IS NULL");
+    $wadah_all->execute();
+    // var_dump($wadah_all);
+    $result = $wadah_all->fetchAll();
+    return $result;
+  } catch (\Exception $e) {
+    var_dump($e);die;
+    return $e;
+  }
+}
+
 function get_paket_once($id)
 {
   try {

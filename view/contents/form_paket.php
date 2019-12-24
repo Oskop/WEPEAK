@@ -100,7 +100,7 @@ $satuan = get_satuan_all();
                       <?php endforeach; ?>
                     </select>
                   </div>
-                  <div class="position-relative form-group"><label for="id_air" class="">Banyak</label>
+                  <div class="position-relative form-group"><label for="id_air" class="">Harga</label>
                     <input name="harga" id="harga" placeholder="Harga" type="number" class="form-control"
                     <?php if (isset($_GET['id'])) {
                       echo "value='" . $data[0]['harga'] . "'";

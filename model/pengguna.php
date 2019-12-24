@@ -1,169 +1,195 @@
 <?php
-// require_once 'pdo_connection.php';
+require_once 'pdo_connection.php';
 
-function get_pengguna_all()
+
+/**
+ *
+ */
+class Pengguna
 {
-  try {
-    $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
-    $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $wadah_all = $con->prepare("SELECT * FROM wepeak.users WHERE delete_at IS NULL");
-    $wadah_all->execute();
-    // var_dump($wadah_all);
-    $result = $wadah_all->fetchAll();
-    return $result;
-  } catch (\Exception $e) {
-    var_dump($e);die;
-    return $e;
-  }
 
-}
+  public $id;
+  public $nama;
+  public $alamat;
+  public $gender;
+  public $no_hp;
+  public $username;
+  public $password;
+  public $email;
+  public $foto;
+  public $role;
 
-function get_pengguna_once($id)
-{
-  try {
-    $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
-    $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    if (isset($id)) {
-      $wadah = $con->prepare("SELECT * FROM wepeak.users WHERE id = :id AND delete_at IS NULL");
-      $wadah->bindParam(':id', $id);
-      $wadah->execute();
-      $result = $wadah->fetchAll();
-      // var_dump($wadah);
+  function get_pengguna_all()
+  {
+    try {
+      $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
+      $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $wadah_all = $con->prepare("SELECT * FROM wepeak.users WHERE delete_at IS NULL");
+      $wadah_all->execute();
+      // var_dump($wadah_all);
+      $result = $wadah_all->fetchAll();
+      $con = null;
       return $result;
-    } else {
-      $error = "Ada kesalahan. Disarankan untuk mode debugging";
-      echo "Ada kesalahan. Disarankan untuk mode debugging";
-      return $error;
+    } catch (\Exception $e) {
+      var_dump($e);die;
+      return $e;
     }
-  } catch (\Exception $e) {
-    echo "Koneksi atau query bermasalah: ". $e->getMessage() . "<br/>";
-    die;
+
   }
 
-}
+  function get_pengguna_once($id)
+  {
+    try {
+      $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
+      $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      if (isset($id)) {
+        $users = $con->prepare("SELECT * FROM wepeak.users WHERE id = :id AND delete_at IS NULL");
+        $users->bindParam(':id', $this->id);
+        $users->execute();
+        $result = $wadah->fetchAll();
+        // var_dump($wadah);
+        $wadah = null;
+        return $result;
+      } else {
+        $error = "Ada kesalahan. Disarankan untuk mode debugging";
+        echo "Ada kesalahan. Disarankan untuk mode debugging";
+        return $error;
+      }
+      $con = null;
+    } catch (\Exception $e) {
+      echo "Koneksi atau query bermasalah: ". $e->getMessage() . "<br/>";
+      die;
+    }
 
-function insert_pengguna($data)
-{
-  try {
-    $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
-    $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $query = "INSERT INTO wepeak.users (nama, alamat, gender, no_hp, password, email, foto, role) VALUES (:nama, :alamat, :gender, :no_hp, :password, :email, :foto, :role)";
-    $statement = $con->prepare($query);
-    if (isset($data)) {
-      $statement->bindParam(':nama', $data['nama']);
-      $statement->bindParam(':alamat', $data['alamat']);
-      $statement->bindParam(':gender', $data['gender']);
-      $statement->bindParam(':no_hp', $data['no_hp']);
-      $statement->bindParam(':password', $data['password']);
-      $statement->bindParam(':email', $data['email']);
-      $statement->bindParam(':role', $data['role']);
-      if (isset($_FILES['foto'])) {
-        if ($_FILES['foto']['error'] == 4) {
-          $foto = upload_foto($_FILES['foto'], 'foto');
-          if ($foto != false) {
-            $statement->bindParam(':foto', $_FILES['foto']);
+  }
+
+  function insert_pengguna()
+  {
+    try {
+      $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
+      $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $query = "INSERT INTO wepeak.users (nama, alamat, gender, no_hp, password, email, foto, role) VALUES (:nama, :alamat, :gender, :no_hp, :password, :email, :foto, :role)";
+      $statement = $con->prepare($query);
+      if (isset($data)) {
+        $statement->bindParam(':nama', $this->nama);
+        $statement->bindParam(':alamat', $this->alamat);
+        $statement->bindParam(':gender', $this->gender);
+        $statement->bindParam(':no_hp', $this->no_hp);
+        $statement->bindParam(':password', $this->password);
+        $statement->bindParam(':email', $this->email);
+        $statement->bindParam(':role', $this->role);
+        if (isset($_FILES['foto'])) {
+          if ($_FILES['foto']['error'] == 4) {
+            $foto = upload_foto($_FILES['foto'], 'foto');
+            if ($foto != false) {
+              $statement->bindParam(':foto', $_FILES['foto']);
+            } else {
+              echo "Gambar tidak sesuai";
+              $statement->bindParam(':foto', null);
+            }
           } else {
-            echo "Gambar tidak sesuai";
+            echo "Gambar Tidak dicantumkan";
             $statement->bindParam(':foto', null);
           }
-        } else {
-          echo "Gambar Tidak dicantumkan";
-          $statement->bindParam(':foto', null);
         }
+        $statement->execute();
+        return "Berhasil Memasukkan Data";
+      } else {
+        return "Data tidak ada.";
       }
-      $statement->execute();
-      return "Berhasil Memasukkan Data";
-    } else {
-      return "Data tidak ada.";
+
+    } catch (\Exception $e) {
+      echo "Koneksi atau query bermasalah: ". $e->getMessage() . "<br/>";
+      die;
     }
 
-  } catch (\Exception $e) {
-    echo "Koneksi atau query bermasalah: ". $e->getMessage() . "<br/>";
-    die;
   }
 
-}
-
-function update_pengguna($id, $data)
-{
-  try {
-    $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
-    $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $query = "UPDATE wepeak.wadah SET nama:nama, alamat:alamat, gender:gender, no_hp:no_hp, password:password, email:email, foto:foto, role:role WHERE id = :id";
-    $statement = $con->prepare($query);
-    if (isset($id)) {
-      $statement->bindParam(':nama', $data['nama']);
-      $statement->bindParam(':alamat', $data['alamat']);
-      $statement->bindParam(':gender', $data['gender']);
-      $statement->bindParam(':no_hp', $data['no_hp']);
-      $statement->bindParam(':password', $data['password']);
-      $statement->bindParam(':email', $data['email']);
-      $statement->bindParam(':role', $data['role']);
-      if (isset($_FILES['foto'])) {
-        if ($_FILES['foto']['error'] == 4) {
-          $foto = upload_foto($_FILES['foto'], 'foto');
-          if ($foto != false) {
-            $statement->bindParam(':foto', $_FILES['foto']);
+  function update_pengguna($id, $data)
+  {
+    try {
+      $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
+      $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $query = "UPDATE wepeak.wadah SET nama:nama, alamat:alamat, gender:gender, no_hp:no_hp, password:password, email:email, foto:foto, role:role WHERE id = :id";
+      $statement = $con->prepare($query);
+      if (isset($id)) {
+        $statement->bindParam(':nama', $data['nama']);
+        $statement->bindParam(':alamat', $data['alamat']);
+        $statement->bindParam(':gender', $data['gender']);
+        $statement->bindParam(':no_hp', $data['no_hp']);
+        $statement->bindParam(':password', $data['password']);
+        $statement->bindParam(':email', $data['email']);
+        $statement->bindParam(':role', $data['role']);
+        if (isset($_FILES['foto'])) {
+          if ($_FILES['foto']['error'] == 4) {
+            $foto = upload_foto($_FILES['foto'], 'foto');
+            if ($foto != false) {
+              $statement->bindParam(':foto', $_FILES['foto']);
+            } else {
+              echo "Gambar tidak sesuai";
+              $statement->bindParam(':foto', null);
+            }
           } else {
-            echo "Gambar tidak sesuai";
+            echo "Gambar Tidak dicantumkan";
             $statement->bindParam(':foto', null);
           }
-        } else {
-          echo "Gambar Tidak dicantumkan";
-          $statement->bindParam(':foto', null);
         }
+        $statement->execute();
+        return "Berhasil Memasukkan Data";
+      } else {
+        return "Data tidak ada.";
       }
-      $statement->execute();
-      return "Berhasil Memasukkan Data";
-    } else {
-      return "Data tidak ada.";
+    } catch (\Exception $e) {
+      echo "Koneksi atau query bermasalah: ". $e->getMessage() . "<br/>";
+      die();
     }
-  } catch (\Exception $e) {
-    echo "Koneksi atau query bermasalah: ". $e->getMessage() . "<br/>";
-    die();
+
   }
 
-}
-
-function delete_pengguna($id)
-{
-  try {
-    $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
-    $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $query = "UPDATE wepeak.users SET delete_at = CURRENT_TIMESTAMP() WHERE id = :id ";
-    echo $query;
-    $statement = $con->prepare($query);
-    if (isset($id)) {
-      $statement->bindParam(':id', $id);
-      // $statement->bindParam(':deleted_at', date("Y-m-d H:i:s"));
-      $statement->execute();
-      return "";
-    } else {
-      return "id belum tercantum";
+  function delete_pengguna($id)
+  {
+    try {
+      $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
+      $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $query = "UPDATE wepeak.users SET delete_at = CURRENT_TIMESTAMP() WHERE id = :id ";
+      echo $query;
+      $statement = $con->prepare($query);
+      if (isset($id)) {
+        $statement->bindParam(':id', $id);
+        // $statement->bindParam(':deleted_at', date("Y-m-d H:i:s"));
+        $statement->execute();
+        return "";
+      } else {
+        return "id belum tercantum";
+      }
+    } catch (\Exception $e) {
+      echo "Koneksi atau query bermasalah: ". $e->getMessage() . "<br/>";
+      die();
     }
-  } catch (\Exception $e) {
-    echo "Koneksi atau query bermasalah: ". $e->getMessage() . "<br/>";
-    die();
+
   }
+
 
 }
 
-function get_pengguna_dropdown()
-{
-  try {
-    $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
-    $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $wadah_all = $con->prepare("SELECT id, jenis, isi FROM wepeak.wadah WHERE deleted_at IS NULL");
-    $wadah_all->execute();
-    // var_dump($wadah_all);
-    $result = $wadah_all->fetchAll();
-    return $result;
-  } catch (\Exception $e) {
-    var_dump($e);die;
-    return $e;
-  }
 
-}
+
+// function get_pengguna_dropdown()
+// {
+//   try {
+//     $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
+//     $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+//     $wadah_all = $con->prepare("SELECT id, jenis, isi FROM wepeak.wadah WHERE deleted_at IS NULL");
+//     $wadah_all->execute();
+//     // var_dump($wadah_all);
+//     $result = $wadah_all->fetchAll();
+//     return $result;
+//   } catch (\Exception $e) {
+//     var_dump($e);die;
+//     return $e;
+//   }
+//
+// }
 
 function upload_foto($file = null, $location = null)
 {

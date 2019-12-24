@@ -5,6 +5,7 @@ session_start();
 $base_url = $_SERVER['DOCUMENT_ROOT'] . '/wepeak/';
 // var_dump($base_url);die();
 $base_url_admin = 'localhost/wepeak/view/';
+
  ?>
 <head>
   <?php require_once 'partials/head.php'; ?>
