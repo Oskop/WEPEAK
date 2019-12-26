@@ -1,26 +1,26 @@
 <?php
 require_once 'pdo_connection.php';
-
+require_once 'paket.php';
 /**
  *
  */
-class Pengguna
+class Keranjang
 {
 
+  // Atribut Transaksi
   public $id;
-  public $nama;
-  public $alamat;
-  public $gender;
-  public $no_hp;
-  public $username;
-  public $password;
-  public $email;
-  public $foto;
-  public $role;
-  public $pertanyaan;
-  public $jawaban;
+  public $id_user;
+  public $alamat; // text / String
+  public $ongkir; // float
+  public $total; // float
 
-  function get_pengguna_all()
+  // Atribut Per Barang
+  public $id_harga_satuan;
+  public $jumlah; // jumlah barnag
+  public $subtotal; // jumlah barang x harga
+
+
+  function get_keranjang_all()
   {
     try {
       $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
@@ -38,7 +38,7 @@ class Pengguna
 
   }
 
-  function get_pengguna_once()
+  function get_keranjang_once()
   {
     try {
       $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
@@ -64,7 +64,7 @@ class Pengguna
 
   }
 
-  function insert_pengguna()
+  function insert_keranjang()
   {
     try {
       $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
@@ -108,7 +108,7 @@ class Pengguna
 
   }
 
-  function update_pengguna($id, $data)
+  function update_keranjang($id, $data)
   {
     try {
       $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
@@ -148,7 +148,7 @@ class Pengguna
 
   }
 
-  function delete_pengguna()
+  function delete_keranjang()
   {
     try {
       $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
@@ -171,7 +171,12 @@ class Pengguna
 
   }
 
-  function login()
+  function tambah_produk()
+  {
+    
+  }
+
+  function log()
   {
     try {
       $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
@@ -194,7 +199,7 @@ class Pengguna
 
 
 
-// function get_pengguna_dropdown()
+// function get_keranjang_dropdown()
 // {
 //   try {
 //     $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');

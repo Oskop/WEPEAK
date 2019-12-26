@@ -5,7 +5,13 @@ session_start();
 $base_url = $_SERVER['DOCUMENT_ROOT'] . '/wepeak/';
 // var_dump($base_url);die();
 $base_url_admin = 'localhost/wepeak/view/';
-
+if (isset($_SESSION['status'])) {
+  if ($_SESSION['role'] != "admin") {
+    echo "<script>window.location = '../public/';</script>";
+  }
+} else {
+  echo "<script>window.location = '../public/';</script>";
+}
  ?>
 <head>
   <?php require_once 'partials/head.php'; ?>

@@ -1,120 +1,75 @@
-<section class="ftco-section ftco-no-pb ftco-no-pt"
+<?php
+require_once '../model/pengguna.php';
+ ?>
+<section class="ftco-section ftco-no-pb ftco-no-pt mt-4 mb-5"
 style="background: -webkit-linear-gradient(left, #3931af, #00c6ff);
     margin-top: 3%;
     padding: 3%;"
 >
-  <div class="container mt-4">
-    <form class="" action="" method="post" enctype="multipart/form-data">
+  <div class="container">
+    <form class="" action="../controller/register.php" method="post">
       <div class="row">
-        <div class="col-md-3 register-left" style="text-align: center;
+        <div class="col-md-3 register-left mt-4" style="text-align: center;
     color: #fff;
     margin-top: 4%;">
-          <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt=""/>
-          <h3>Welcome</h3>
-          <p>You are 30 seconds away from earning your own money!</p>
-          <input type="submit" name="" value="Login"/><br/>
+          <h3>Selamat Datang</h3>
+          <p>Segera Rasakan Kesegaran dan Kesehatan Tubuh Alamiah Anda</p>
+          <a class="btn btn-info" href="?page=login"/>Login</a><br/>
         </div>
-        <div class="col-md-9 register-right">
-          <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
-            <li class="nav-item">
-              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Pelanggan</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Admin</a>
-            </li>
-          </ul>
+        <div class="col-md-9 register-right mt-4">
             <div class="tab-content" id="myTabContent">
               <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                <h3 class="register-heading">Daftar Sebagai Pelanggan</h3>
+                <h3 class="register-heading">Form Pendaftaran</h3>
                 <div class="row register-form">
                     <div class="col-md-6">
                       <div class="form-group">
-                        <input type="text" class="form-control" name="nama" placeholder="Nama *" value="" />
+                        <input type="text" class="form-control" name="nama" id="nama" maxlength="30" placeholder="Nama *" value="" required/>
+                        <input type="hidden" name="role" value="pelanggan">
                       </div>
                       <div class="form-group">
-                        <input type="email" class="form-control" name="email" placeholder="Email *" value="" />
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Email *" value="" required/>
                       </div>
                       <div class="form-group">
-                        <input type="text" class="form-control" name="no_hp" placeholder="Nomor HP *" value="" />
+                        <input type="text" class="form-control" id="no_hp" name="no_hp" placeholder="Nomor HP *" value="" required/>
                       </div>
                       <div class="form-group">
-                        <textarea  class="form-control" name="alamat"  placeholder="Alamat *" value="" ></textarea>
+                        <textarea  class="form-control" name="alamat"  placeholder="Alamat *" value="" required></textarea>
                       </div>
                       <div class="form-group">
                         <div class="maxl">
                           <label class="radio inline">
                             <input type="radio" name="gender" value="laki-laki" checked>
-                              <span> Laki-Laki </span>
+                              <span style="color:white;"> Laki-Laki </span>
                           </label>
                           <label class="radio inline">
                             <input type="radio" name="gender" value="perempuan">
-                            <span>Perempuan </span>
+                            <span style="color:white;">Perempuan </span>
                           </label>
                         </div>
                       </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Username *" value="" />
+                            <input type="text" class="form-control" name="username" id="username" minlength="1" maxlength="25" placeholder="Username *" value="" required/>
                         </div>
                         <div class="form-group">
-                            <input type="text" minlength="10" maxlength="10" name="txtEmpPhone" class="form-control" placeholder="Your Phone *" value="" />
+                            <input type="password" name="password" id="password" class="form-control" placeholder="Password *"  value=""
+                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" minlength="8" onkeyup="check();" data-toggle="popover" title="Validasi Password" data-content="Harus berisikan paling tidak 1 angka, 1 huruf besar dan satu huruf kecil dan panjang karakter tidak boleh kurang dari 8" required/>
+                            <small id="passwordMessage"></small>
                         </div>
                         <div class="form-group">
-                            <select class="form-control">
-                                <option class="hidden"  selected disabled>Please select your Sequrity Question</option>
-                                <option>What is your Birthdate?</option>
-                                <option>What is Your old Phone Number</option>
-                                <option>What is your Pet Name?</option>
-                            </select>
+                          <input type="password" class="form-control" id="password2" name="password2" placeholder="Konfirmasi Password *" value="" onkeyup="check();" required/>
+                          <small id="confirmMessage"></small>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Enter Your Answer *" value="" />
+                          <input type="text" class="form-control" id="pertanyaan" name="pertanyaan" placeholder="Pertanyaan untuk reset Password *" value="" required/>
                         </div>
-                        <input type="submit" class="btnRegister"  value="Register"/>
+                        <div class="form-group">
+                          <input type="text" class="form-control" id="jawaban" name="jawaban" placeholder="Jawaban yang paling diingat *" value="" required/>
+                        </div>
+                        <input type="submit" class="btnRegister btn btn-primary mb-3" id="registerBtn" name="register" value="Register"/>
                     </div>
                 </div>
-              </div>
-              <div class="tab-pane fade show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                  <h3  class="register-heading">Apply as a Hirer</h3>
-                  <div class="row register-form">
-                      <div class="col-md-6">
-                          <div class="form-group">
-                              <input type="text" class="form-control" placeholder="First Name *" value="" />
-                          </div>
-                          <div class="form-group">
-                              <input type="text" class="form-control" placeholder="Last Name *" value="" />
-                          </div>
-                          <div class="form-group">
-                              <input type="email" class="form-control" placeholder="Email *" value="" />
-                          </div>
-                          <div class="form-group">
-                              <input type="text" maxlength="10" minlength="10" class="form-control" placeholder="Phone *" value="" />
-                          </div>
-
-
-                      </div>
-                      <div class="col-md-6">
-                          <div class="form-group">
-                              <input type="password" class="form-control" placeholder="Password *" value="" />
-                          </div>
-                          <div class="form-group">
-                              <input type="password" class="form-control" placeholder="Confirm Password *" value="" />
-                          </div>
-                          <div class="form-group">
-                              <select class="form-control">
-                                  <option class="hidden"  selected disabled>Please select your Sequrity Question</option>
-                                  <option>What is your Birthdate?</option>
-                                  <option>What is Your old Phone Number</option>
-                                  <option>What is your Pet Name?</option>
-                              </select>
-                          </div>
-                          <div class="form-group">
-                              <input type="text" class="form-control" placeholder="`Answer *" value="" />
-                          </div>
-                          <input type="submit" class="btnRegister"  value="Register"/>
-                      </div>
-                  </div>
               </div>
             </div>
         </div>

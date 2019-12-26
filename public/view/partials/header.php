@@ -44,7 +44,11 @@
         <li class="nav-item"><a href="<?='?page=contact';?>" class="nav-link">Kontak</a></li>
         <li class="nav-item cta cta-colored"><a href="<?='?page=cart';?>" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
 				<li class="nav-item dropdown">
-					<a href="<?='?page=contact';?>" class="nav-link">Akun</a>
+					<a href="<?php if (isset($_SESSION['status'])) {
+						echo "?page=account";
+					} else {
+						echo "?page=login";
+					}?>" class="nav-link">Akun</a>
 					<div class="dropdown-menu" aria-labelledby="dropdown05">
 						<?php if (!isset($_SESSION['loggedin'])): ?>
 							<a class="dropdown-item" href="<?='?page=login';?>">Masuk</a>

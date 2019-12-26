@@ -17,9 +17,24 @@ $base_url_user = 'localhost/wepeak/public/';
       <?php elseif ($_GET['page'] == "contact"): ?>
         <?php require_once 'view/contents/kontak.php'; ?>
       <?php elseif ($_GET['page'] == "cart"): ?>
-        <?php require_once 'view/contents/keranjang.php'; ?>
+        <?php if (!isset($_SESSION['status'])): ?>
+            <?="<script>window.location = '?page=login';</script>";?>
+          <?php else: ?>
+            <?php require_once 'view/contents/keranjang.php'; ?>
+        <?php endif; ?>
+      <?php elseif ($_GET['page'] == "checkout"): ?>
+        <?php if (!isset($_SESSION['status'])): ?>
+            <?="<script>window.location = '?page=login';</script>";?>
+          <?php else: ?>
+            <?php require_once 'view/contents/checkout.php'; ?>
+        <?php endif; ?>
       <?php elseif ($_GET['page'] == "login"): ?>
-          <?php require_once 'view/contents/login.php'; ?>
+        <?php if (isset($_SESSION['status'])): ?>
+          <?php echo "<script>var time = setTimeout(function()
+                {window.location = '.'}, 0);</script>"; ?>
+          <?php else: ?>
+            <?php require_once 'view/contents/login.php'; ?>
+        <?php endif; ?>
       <?php elseif ($_GET['page'] == "register"): ?>
           <?php require_once 'view/contents/register.php'; ?>
       <?php endif; ?>
