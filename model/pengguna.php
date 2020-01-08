@@ -64,6 +64,32 @@ class Pengguna
 
   }
 
+  function getTanyaJawab()
+  {
+    if ($this->email) {
+      try {
+        $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
+        $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $users = $con->prepare("SELECT pertanyaan, jawaban FROM wepeak.users WHERE email = :email AND delete_at IS NULL");
+        $users->bindParam(':email', $this->email);
+        $users->execute();
+        $result = $users->fetchAll();
+        // var_dump($wadah);
+        $users = null;
+        return $result;
+        $con = null;
+      } catch (\Exception $e) {
+        echo "Koneksi atau query bermasalah: ". $e->getMessage() . "<br/>";
+        die;
+      }
+    }
+    else {
+      $error = "Ada kesalahan. Disarankan untuk mode debugging";
+      // echo "Ada kesalahan. Disarankan untuk mode debugging";
+      return $error;
+    }
+  }
+
   function insert_pengguna()
   {
     try {
@@ -108,12 +134,12 @@ class Pengguna
 
   }
 
-  function update_pengguna($id, $data)
+  function update_pengguna()
   {
     try {
       $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
       $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      $query = "UPDATE wepeak.wadah SET nama=:nama, alamat=:alamat, gender=:gender, no_hp=:no_hp, username=:username, email=:email, foto=:foto WHERE id = :id";
+      $query = "UPDATE wepeak.users SET nama=:nama, alamat=:alamat, gender=:gender, no_hp=:no_hp, username=:username, email=:email, foto=:foto WHERE id = :id";
       $statement = $con->prepare($query);
       if (isset($id)) {
         $statement->bindParam(':nama', htmlspecialchars(trim($this->nama)));
@@ -146,6 +172,27 @@ class Pengguna
       die();
     }
 
+  }
+
+  function resetPassword()
+  {
+    if ($this->email != null && $this->password != null) {
+      try {
+        $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
+        $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $query = "UPDATE wepeak.users SET password=:password WHERE email = :email";
+        $statement = $con->prepare($query);
+
+        $statement->bindParam(':password', $this->password);
+        $statement->bindParam(':email', $this->email);
+
+        $statement->execute();
+        return "Berhasil Memasukkan Data";
+      } catch (\Exception $e) {
+        echo "Koneksi atau query bermasalah: ". $e->getMessage() . "<br/>";
+        die;
+      }
+    }
   }
 
   function delete_pengguna()

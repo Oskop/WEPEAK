@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 08, 2020 at 06:19 AM
+-- Generation Time: Jan 08, 2020 at 03:46 PM
 -- Server version: 10.4.10-MariaDB
 -- PHP Version: 7.3.12
 
@@ -214,7 +214,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `nama`, `alamat`, `gender`, `no_hp`, `username`, `password`, `email`, `foto`, `role`, `pertanyaan`, `jawaban`, `created_at`, `update_at`, `delete_at`) VALUES
-(1, 'admin', 'Jalan Mujaher No. 12 Rt.1 Rw.5 Tegalsari Tegal Barat Tegal', 'Laki-Laki', '12736912', 'kangen', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'oskop17@gmail.com', NULL, 'admin', 'w', 'w', '2019-12-24 11:11:20', '2019-12-25 12:57:03', NULL),
+(1, 'admin', 'Jalan Mujaher No. 12 Rt.1 Rw.5 Tegalsari Tegal Barat Tegal', 'Laki-Laki', '12736912', 'kangen', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'oskop17@gmail.com', NULL, 'admin', 'w', 'w', '2019-12-24 11:11:20', '2020-01-08 14:41:27', NULL),
 (2, 'askdjh', 'aksjhd', 'Laki-Laki', 'askjdh', '082265555272', '377c11fc9a7bd7726ed87951b1a1ba8b4fddade76e1f631615fd06b06c10418156dd51f1d52a56601a69b1f5f5d82b3d9995e070ae780f54fc6ed3249fa835e2', 'ass@gmail.com', NULL, '', 'lkasjd', 'lkajsd', '2019-12-24 11:13:28', '2019-12-24 11:13:28', NULL),
 (4, 'asdlj', 'asldkjla', 'Laki-Laki', 'laksjd', '091230912', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'askjhd@gmail.com', NULL, '', 'klasjd', 'laskjd', '2019-12-24 11:16:33', '2019-12-24 11:16:33', NULL),
 (5, 'asdjh', 'askjdhn,m', 'Laki-Laki', 'asdu', 'oskop', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', 'qowieh@g.ml', NULL, 'pelanggan', 'asdj', 'jasd', '2019-12-24 11:20:15', '2019-12-25 05:25:10', NULL);

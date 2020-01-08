@@ -72,7 +72,7 @@ if (isset($_SESSION['keranjang'])) {
         </div>
       </div>
     </div>
-    <?php if (isset($_SESSION['keranjang']) || $_SESSION['keranjang'] != null): ?>
+    <?php if (isset($_SESSION['keranjang'])): if($_SESSION['keranjang'] != null){ ?>
 
       <div class="col-lg-4 mt-5 cart-wrap ftco-animate">
         <div class="cart-total mb-3">
@@ -94,7 +94,7 @@ if (isset($_SESSION['keranjang'])) {
         </div>
         <p><a href="#" class="btn btn-primary py-3 px-4 checkout">Buat Pesanan</a></p>
       </div>
-    <?php endif; ?>
+    <?php } endif; ?>
     </div>
   </div>
 </section>

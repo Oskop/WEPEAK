@@ -12,7 +12,7 @@
   <script src="js/jquery.animateNumber.min.js"></script>
   <script src="js/bootstrap-datepicker.js"></script>
   <script src="js/scrollax.min.js"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script> -->
   <script src="js/google-map.js"></script>
   <script src="js/main.js"></script>
   <script type="text/javascript">
@@ -134,9 +134,10 @@
             parseInt($('#subTotalKeranjang').text().replace(/\D/g, '')) + parseInt(5000))
           );
           // END dari set harga total keranjang pada halaman keranjang
+
           // POST buat Pesanan
           $('.checkout').click(function() {
-            $.post('../controller/pesan.php?id=<?=$_SESSION['id'];?>', {
+            $.post('../controller/pesan.php?id=<?php if(isset($_SESSION['id'])){echo $_SESSION['id'];} ?>', {
               ongkir: 5000,
               total: $('#hargaTotalKeranjang').text().replace(/\D/g, ''),
               status: "Dalam Urutan",
@@ -169,17 +170,140 @@
             $('#'+ini).children('.lunasTransaksi').show();
             $('#'+ini).children('.produkRowCard').hide();
           });
+          // END dari POST buat Pesanan
+
+          // Forgot Password Handler
+          // Handler Kirim Email
+          $('.kirimEmailnya').click(function() {
+            var eror = false;
+            console.log('klik');
+            var emails = $('#emailnya').val();
+            if (emails == '') {
+              alert('Email Kosong. Bisa diisikan dulu.');
+              eror = true
+            }
+            var pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+
+            if(!pattern.test(emails)) {
+              alert('Email Tidak Valid. Isikan email sesuai dengan aturan penulisan email');
+              eror = true;
+            }else {
+              // console.log('valid');
+              $.post('../controller/forpass.php', {
+                email: emails,
+                },
+                function(data) {
+                  var response = JSON.parse(data);
+                  alert(response.pesan);
+                  if (response.pesan != "email tidak terkirim"
+                      && response.pesan != "Email tidak ada di dalam database") {
+                    // console.log("sukses");
+                    $('#pertanyaannya').val(response.pertanyaan);
+                    $('#pertanyaannya').prop('disabled', true);
+                  }
+                  // console.log(response);
+                });
+            }
+            if (eror == true) {return false;}
+            console.log(emails);
+          });
+          // Hadler Kirim jawaban
+          $('#kirimJawaban').click(function() {
+            var eror = false;
+            console.log('klik');
+            var emails = $('#emailnya').val();
+            // var tanya = $('#pertanyaannya').val();
+            var jawab = $('#jawabannya').val();
+            if (emails == '') {
+              alert('Email Kosong. Bisa diisikan dulu.');
+              eror = true
+            }
+            var pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+
+            if(!pattern.test(emails)) {
+              alert('Email Tidak Valid. Isikan email sesuai dengan aturan penulisan email');
+              eror = true;
+            }else {
+              // console.log('valid');
+              $.post('../controller/forpass.php', {
+                email: emails, jawaban: jawab
+              },
+              function(data) {
+                var response = JSON.parse(data);
+                alert(response.pesan);
+                if (response.pesan != "email tidak terkirim"
+                    && response.pesan != "Email tidak ada di dalam database"
+                    && response.pesan != "Jawaban Salah!") {
+                      console.log('Anda Benar');
+                      $('#jawabannya').prop('disabled', true);
+                      $('#emailnya').prop('disabled', true);
+                      $('#kirimEmailnya').prop('disabled', true);
+                } else if (response.pesan == "Jawaban Salah!") {
+                  console.log("lah salah, buka lagi");
+                  $('#jawabannya').prop('disabled', false);
+                  eror = true;
+                }
+                // console.log(response);
+              });
+            }
+            if (eror == true) {return false;}
+            console.log(emails);
+          });
+          // Handler Bagian Kirim Password Baru
+          $('#kirimPasswordBaru').click(function() {
+            var emails = $('#emailnya').val();
+            var tanya = $('#emailnya').val();
+            var jawab = $('#jawabannya').val();
+            var passw = $('#password').val();
+            var passw2 = $('#password2').val();
+            var eror = false;
+            if (emails == '' || tanya == '' || jawab == '' || passw == '' || passw2 == '') {
+              alert('Lengkapi form terlebih dahulu!');
+              eror = true;
+            }
+            var pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+
+            if(!pattern.test(emails)) {
+              alert('Email Tidak Valid. Isikan email sesuai dengan aturan penulisan email');
+              return false;
+            } else {
+              if (passw == passw2) {
+                $.post('../controller/forpass.php', {
+                  email: emails, jawaban: jawab, password:passw
+                }, function(data) {
+                  var response = JSON.parse(data);
+                  alert(response.pesan);
+                  if (response.pesan != "email tidak terkirim"
+                      || response.pesan != "Email tidak ada di dalam database"
+                      || response.pesan != "Jawaban Salah!"
+                      || response.pesan != "") {
+                        console.log('Anda Benar');
+                        window.location = "?page=login";
+                      }
+                });
+              } else {
+                alert('Password tidak terkonfirmasi. Pastikan konfirmasi password sama dengan password baru');
+              }
+
+            }
+
+            if (eror == true) {return false;}
+          });
+
       });
       function numberWithCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
       }
       var check = function() {
         if (document.getElementById('password').value == document.getElementById('password2').value) {
-          document.getElementById('registerBtn').disabled = false;
+          if($('#registerBtn').length){
+          document.getElementById('registerBtn').disabled = false;}
         } else if (document.getElementById('password').value == "" || document.getElementById('password2').value == "" || document.getElementById('nama').value == "" || document.getElementById('email').value == "" || document.getElementById('no_hp').value == "")  {
-          document.getElementById('registerBtn').disabled = true;
+          if($('#registerBtn').length){
+          document.getElementById('registerBtn').disabled = true;}
         } else {
-          document.getElementById('registerBtn').disabled = true;
+          if($('#registerBtn').length){
+          document.getElementById('registerBtn').disabled = true;}
         }
       }
   </script>

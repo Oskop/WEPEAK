@@ -33,12 +33,12 @@ $base_url_user = 'localhost/wepeak/public/';
         <?php endif; ?>
 
       <!-- Halaman History -->
-    <?php elseif ($_GET['page'] == "history"): ?>
-        <?php if (!isset($_SESSION['status'])): ?>
-            <?="<script>window.location = '?page=login';</script>";?>
-          <?php else: ?>
-            <?php require_once 'view/contents/histori.php'; ?>
-        <?php endif; ?>
+      <?php elseif ($_GET['page'] == "history"): ?>
+          <?php if (!isset($_SESSION['status'])): ?>
+              <?="<script>window.location = '?page=login';</script>";?>
+            <?php else: ?>
+              <?php require_once 'view/contents/histori.php'; ?>
+          <?php endif; ?>
 
       <?php elseif ($_GET['page'] == "login"): ?>
         <?php if (isset($_SESSION['status'])): ?>
@@ -51,6 +51,10 @@ $base_url_user = 'localhost/wepeak/public/';
       <?php elseif ($_GET['page'] == "register"): ?>
           <?php require_once 'view/contents/register.php'; ?>
       <?php endif; ?>
+
+
+    <?php elseif(isset($_GET['reset'])): ?>
+      <?php require_once 'view/contents/forget.php'; ?>
     <?php else: ?>
       <?php require_once 'view/contents/home.php'; ?>
     <?php endif; ?>
