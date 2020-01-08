@@ -40,6 +40,7 @@ $base_url_user = 'localhost/wepeak/public/';
               <?php require_once 'view/contents/histori.php'; ?>
           <?php endif; ?>
 
+      <!-- Halaman Login -->
       <?php elseif ($_GET['page'] == "login"): ?>
         <?php if (isset($_SESSION['status'])): ?>
           <?php echo "<script>var time = setTimeout(function()
@@ -48,9 +49,28 @@ $base_url_user = 'localhost/wepeak/public/';
             <?php require_once 'view/contents/login.php'; ?>
         <?php endif; ?>
 
+      <!-- Halaman Profil -->
+      <?php elseif ($_GET['page'] == "profile"): ?>
+        <?php if (isset($_SESSION['status'])): ?>
+          <?php require_once 'view/contents/profil.php'; ?>
+        <?php else:  ?>
+          <?="<script>window.location = '.';</script>";?>
+        <?php endif; ?>
+
       <?php elseif ($_GET['page'] == "register"): ?>
           <?php require_once 'view/contents/register.php'; ?>
+
+
+      <?php elseif ($_GET['page'] == "logout"):
+        session_reset();
+        session_unset();
+        session_destroy();
+        echo "<script>window.location = '../';</script>";
+        ?>
+
+
       <?php endif; ?>
+
 
 
     <?php elseif(isset($_GET['reset'])): ?>

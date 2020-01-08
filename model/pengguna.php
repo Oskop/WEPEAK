@@ -142,12 +142,12 @@ class Pengguna
       $query = "UPDATE wepeak.users SET nama=:nama, alamat=:alamat, gender=:gender, no_hp=:no_hp, username=:username, email=:email, foto=:foto WHERE id = :id";
       $statement = $con->prepare($query);
       if (isset($id)) {
-        $statement->bindParam(':nama', htmlspecialchars(trim($this->nama)));
-        $statement->bindParam(':alamat', htmlspecialchars(trim($this->alamat)));
-        $statement->bindParam(':gender', htmlspecialchars(trim($this->gender)));
-        $statement->bindParam(':no_hp', htmlspecialchars(trim($this->no_hp)));
-        $statement->bindParam(':username', htmlspecialchars(trim($this->username)));
-        $statement->bindParam(':email', htmlspecialchars(trim($this->email)));
+        $statement->bindParam(':nama', $this->nama);
+        $statement->bindParam(':alamat', $this->alamat);
+        $statement->bindParam(':gender', $this->gender);
+        $statement->bindParam(':no_hp', $this->no_hp);
+        $statement->bindParam(':username', $this->username);
+        $statement->bindParam(':email', $this->email);
         if (isset($_FILES['foto'])) {
           if ($_FILES['foto']['error'] == 4) {
             $foto = upload_foto($_FILES['foto'], 'foto');

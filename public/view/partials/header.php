@@ -68,7 +68,7 @@
 					;} else {echo "0";};?></span>]</a></li>
 				<li class="nav-item dropdown">
 					<a href="<?php if (isset($_SESSION['status'])) {
-						echo "?page=account";
+						echo '?page=profile&id=' . $_SESSION['id'];
 					} else {
 						echo "?page=login";
 					}?>" class="nav-link">Akun</a>
@@ -79,7 +79,7 @@
 							</div>
 							<?php else: ?>
 								<div class="dropdown-menu" aria-labelledby="dropdown05">
-									<a class="dropdown-item" href="<?='?page=profile';?>">Profil</a>
+									<a class="dropdown-item" href="<?='?page=profile&id=' . $_SESSION['id'];?>">Profil</a>
 									<a class="dropdown-item" href="<?='?page=history';?>">Riwayat</a>
 									<a class="dropdown-item" href="<?='?page=logout';?>">Logout</a>
 								</div>

@@ -69,11 +69,11 @@
                                     <i class="fa fa-angle-down ml-2 opacity-8"></i>
                                 </a>
                                 <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
-                                    <button type="button" tabindex="0" class="dropdown-item">User Account</button>
+                                    <a href="../public/?page=profile&id=<?=$_SESSION['id'];?>" type="button" tabindex="0" class="dropdown-item">Profil</a>
                                     <!-- <button type="button" tabindex="0" class="dropdown-item">Settings</button>
                                     <button type="button" tabindex="0" class="dropdown-item">Actions</button>-->
-                                    <div tabindex="-1" class="dropdown-divider"></div> 
-                                    <button type="button" tabindex="0" class="dropdown-item">Keluar</button>
+                                    <div tabindex="-1" class="dropdown-divider"></div>
+                                    <a href="../public/?page=logout" type="button" tabindex="0" class="dropdown-item">Keluar</a>
                                 </div>
                             </div>
                         </div>
