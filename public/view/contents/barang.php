@@ -24,7 +24,7 @@ $paket = show_paket_all();
                 <a href="#" class="add-to-cart d-flex justify-content-center align-items-center text-center">
                   <span><i class="ion-ios-menu"></i></span>
                 </a>
-                <a href="cart.html" class="buy-now d-flex justify-content-center align-items-center mx-1">
+                <a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1 cartadd" id="<?=$data['id']."cartadd";?>">
                   <span><i class="ion-ios-cart"></i></span>
                 </a>
               </div>

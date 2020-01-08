@@ -13,8 +13,11 @@ class Keranjang
   public $alamat; // text / String
   public $ongkir; // float
   public $total; // float
+  public $status; // string
+  public $lunas; // tinyint
 
   // Atribut Per Barang
+  public $lastID;
   public $id_harga_satuan;
   public $jumlah; // jumlah barnag
   public $subtotal; // jumlah barang x harga
@@ -25,10 +28,57 @@ class Keranjang
     try {
       $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
       $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      $wadah_all = $con->prepare("SELECT * FROM wepeak.users WHERE delete_at IS NULL");
-      $wadah_all->execute();
-      // var_dump($wadah_all);
-      $result = $wadah_all->fetchAll();
+      $transaksi = $con->prepare("SELECT * FROM wepeak.transaksi WHERE delete_at IS NULL");
+      $transaksi->execute();
+      // var_dump($transaksi);
+      $result = $transaksi->fetchAll();
+
+      $con = null;
+      return $result;
+    } catch (\Exception $e) {
+      var_dump($e);die;
+      return $e;
+    }
+
+  }
+
+  function get_keranjang_all_belum_lunas()
+  {
+    try {
+      $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
+      $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $transaksi = $con->prepare("SELECT transaksi.id, transaksi.alamat, transaksi.ongkir, transaksi.total,transaksi.status, transaksi.lunas,
+                                  users.nama
+                                  FROM wepeak.transaksi
+                                  INNER JOIN users ON transaksi.id_user=users.id
+                                  WHERE transaksi.delete_at IS NULL AND transaksi.lunas = 0
+                                  ORDER BY transaksi.created_at;");
+      $transaksi->execute();
+      // var_dump($transaksi);
+      $result = $transaksi->fetchAll();
+
+      $con = null;
+      return $result;
+    } catch (\Exception $e) {
+      var_dump($e);die;
+      return $e;
+    }
+
+  }
+
+  function get_keranjang_pengguna()
+  {
+    try {
+      $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
+      $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $transaksi = $con->prepare("SELECT * FROM wepeak.transaksi
+                                  WHERE delete_at IS NULL AND id_user = :id_user
+                                  ORDER BY id DESC");
+      $transaksi->bindParam(':id_user', $this->id_user);
+      $transaksi->execute();
+      // var_dump($transaksi);
+      $result = $transaksi->fetchAll();
+
       $con = null;
       return $result;
     } catch (\Exception $e) {
@@ -44,7 +94,7 @@ class Keranjang
       $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
       $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
       if (isset($id)) {
-        $users = $con->prepare("SELECT * FROM wepeak.users WHERE id = :id AND delete_at IS NULL");
+        $users = $con->prepare("SELECT * FROM wepeak.keranjang WHERE id = :id AND delete_at IS NULL");
         $users->bindParam(':id', $this->id);
         $users->execute();
         $result = $users->fetchAll();
@@ -64,49 +114,75 @@ class Keranjang
 
   }
 
+  function get_idbarang_pengguna()
+  {
+    try {
+      $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
+      $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $query = "SELECT * FROM wepeak.detail_transaksi WHERE id_transaksi = :id_transaksi";
+
+      $statement = $con->prepare($query);
+      $statement->bindParam(':id_transaksi', $this->id);
+
+      $statement->execute();
+      $result = $statement->fetchAll();
+      return $result;
+    } catch (\Exception $e) {
+      echo "Koneksi atau query bermasalah: ". $e->getMessage(). "<br/>";
+    }
+  }
+
   function insert_keranjang()
   {
     try {
       $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
       $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      $query = "INSERT INTO wepeak.users (nama, alamat, gender, no_hp, username, password, email, role, pertanyaan, jawaban) VALUES (:nama, :alamat, :gender, :no_hp, :username, :password, :email, :role, :pertanyaan, :jawaban)";
+      $query = "INSERT INTO wepeak.transaksi (id_user, alamat, ongkir, total, status, lunas)
+                VALUES (:id_user, :alamat, :ongkir, :total, :status, :lunas)";
       $statement = $con->prepare($query);
 
-      $statement->bindParam(':nama', $this->nama);
+      $statement->bindParam(':id_user', $this->id_user);
       $statement->bindParam(':alamat', $this->alamat);
-      $statement->bindParam(':gender', $this->gender);
-      $statement->bindParam(':no_hp', $this->no_hp);
-      $statement->bindParam(':username', $this->username);
-      $statement->bindParam(':password', hash('sha512', $this->password));
-      $statement->bindParam(':email', $this->email);
-      $statement->bindParam(':role', $this->role);
-      $statement->bindParam(':pertanyaan', $this->pertanyaan);
-      $statement->bindParam(':jawaban', $this->jawaban);
-      // if (isset($_FILES['foto'])) {
-      //   if ($_FILES['foto']['error'] == 4) {
-      //     $foto = upload_foto($_FILES['foto'], 'foto');
-      //     if ($foto != false) {
-      //       $statement->bindParam(':foto', $_FILES['foto']);
-      //     } else {
-      //       echo "Gambar tidak sesuai";
-      //       $statement->bindParam(':foto', null);
-      //     }
-      //   } else {
-      //     echo "Gambar Tidak dicantumkan";
-      //     $statement->bindParam(':foto', null);
-      //   }
-      // } else {
-      //   $statement->bindParam(':foto', htmlspecialchars(strip_tags("user.jpg")));
-      // }
-      var_dump($this->nama);die;
+      $statement->bindParam(':ongkir', $this->ongkir);
+      $statement->bindParam(':total', $this->total);
+      $statement->bindParam(':status', $this->status);
+      $statement->bindParam(':lunas', $this->lunas);
+
+      // var_dump($this->nama);die;
       $statement->execute();
-      return "<script>location: 'localhost/wepeak/public/'</script>";
+      $statement = $con->prepare("SELECT MAX(id) id FROM wepeak.transaksi");
+      $statement->execute();
+      $lastId = $statement->fetchAll();
+      // var_dump($lastId[0]['id']);die;
+      return $lastId[0]['id'];
     } catch (\Exception $e) {
       echo "Koneksi atau query bermasalah: ". $e->getMessage() . "<br/>";
       die;
     }
 
   }
+
+  function insert_barang()
+  {
+    try {
+      $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
+      $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $query = "INSERT INTO wepeak.detail_transaksi (id_transaksi, id_harga_satuan, jumlah, subtotal)
+                VALUES (:id_transaksi, :id_harga_satuan, :jumlah, :subtotal)";
+
+      $statement = $con->prepare($query);
+      $statement->bindParam(':id_transaksi', $this->lastID);
+      $statement->bindParam(':id_harga_satuan', $this->id_harga_satuan);
+      $statement->bindParam(':jumlah', $this->jumlah);
+      $statement->bindParam(':subtotal', $this->subtotal);
+
+      $statement->execute();
+    } catch (\Exception $e) {
+      echo "Koneksi atau query bermasalah: ". $e->getMessage(). "<br/>";
+    }
+
+  }
+
 
   function update_keranjang($id, $data)
   {
@@ -148,12 +224,35 @@ class Keranjang
 
   }
 
+  function ubahStatus()
+  {
+    try {
+      $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
+      $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $query = "UPDATE wepeak.transaksi SET status=:status WHERE id = :id";
+      $statement = $con->prepare($query);
+      if (isset($this->id)) {
+        $statement->bindParam(':status', $this->status);
+        $statement->bindParam(':id', $this->id);
+        $statement->execute();
+        // var_dump($statement);die;
+        return "Berhasil Memasukkan Data";
+      } else {
+        return "Data tidak ada.";
+      }
+    } catch (\Exception $e) {
+      echo "Koneksi atau query bermasalah: ". $e->getMessage() . "<br/>";
+      die();
+    }
+
+  }
+
   function delete_keranjang()
   {
     try {
       $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
       $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      $query = "UPDATE wepeak.users SET delete_at = CURRENT_TIMESTAMP() WHERE id = :id ";
+      $query = "UPDATE wepeak.transaksi SET delete_at = CURRENT_TIMESTAMP() WHERE id = :id ";
       echo $query;
       $statement = $con->prepare($query);
       if (isset($this->id)) {
@@ -173,7 +272,7 @@ class Keranjang
 
   function tambah_produk()
   {
-    
+
   }
 
   function log()
@@ -215,38 +314,5 @@ class Keranjang
 //   }
 //
 // }
-
-function upload_foto($file = null, $location = null)
-{
-  $file_name = $file['name'];
-  $file_size = $file['size'];
-  $error = $file['error'];
-  $tmp_name = $file['tmp_name'];
-
-  if ($error == 4) {
-    echo '<script>alert("Pilih Foto")</script>';
-    return false;
-  }
-
-  $valid = ['jpg', 'jpeg', 'png'];
-  $file_extension = explode('.', $file_name);
-  $extension = strtolower(end($file_extension));
-  if (!in_array($extension, $valid)) {
-    echo "<script>alert('Gambar harus berekstensi jpg, jpeg, atau png')</script>";
-    return false;
-  }
-
-  if ($file_size > 1000000) {
-    echo '<script>alert("Ukuran file gambar tidak boleh lebih dari 1MB")</script>';
-    return false;
-  }
-
-  $new_name = uniqid();
-  $new_name .= '.';
-  $new_name .= $extension;
-
-  move_uploaded_file($tmp_name, 'assets/images/' . $location . '/' . $new_name);
-  return $new_name;
-}
 
  ?>

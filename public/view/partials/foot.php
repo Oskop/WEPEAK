@@ -15,7 +15,6 @@
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
   <script src="js/google-map.js"></script>
   <script src="js/main.js"></script>
-  <script src="js/login_register.js"></script>
   <script type="text/javascript">
       $(document).ready(function(){
           var uri = window.location.toString();
@@ -23,6 +22,7 @@
             var clean_uri = uri.substring(0, uri.indexOf("?"));
             window.history.replaceState({}, document.title, clean_uri);
           }
+          // validasi nama lengkap
           $("#nama").keypress(
             function (e) {
               var charTyped = String.fromCharCode(e.which);
@@ -35,6 +35,7 @@
                 return false;
               }
           });
+          // validasi email
           $('#email').keyup(function() {
             var pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
 
@@ -52,18 +53,21 @@
               $('#email_validation_error').text('Email is valid');
             }
           });
+          // petunjuk password
           $('#password').on('focus', function() {
             console.log('popover harusnya keluar');
             $('#password').popover({
               trigger: 'keypress'
             });
           });
+          // petunjuk password
           $('#password').keyup(function() {
-            console.log('popover harusnya keluar');
+            // console.log('popover harusnya keluar');
             $('#password').popover({
               trigger: 'keypress'
             });
           });
+          // validasi nomor hp
           $("#no_hp").keypress(
             function (e) {
               var charTyped = String.fromCharCode(e.which);
@@ -76,7 +80,99 @@
                 return false;
               }
           });
+          // Tambah produk ke dalam keranjang
+          $('.cartadd').click(function() {
+            var id = $(this).attr('id').replace(/\D/g, '');
+            // alert('data' + id + "terpilih");
+            $.get("../controller/pilih.php?id=" + id + "&carting=add", function(data, status){
+              var cart = JSON.parse(data); var count;
+              alert("" + data + " dimasukkan ke dalam keranjang "
+              // + "\nStatus: " + id
+            );
+              // cart.forEach(function (item, index) {
+              //
+              // });
+              $('.keranjangHargaTotal').text(numberWithCommas(cart.harga));
+            });
+          });
+          // table keranjang perubahan jumlah paket
+          $('.jumlah_paket').change(function() {
+            var jumlah = $(this).val();
+            // var id = $(this).attr('id').replace(/\D/g, '');
+            var harga_satuan = $(this).closest('.productRow').children('.price').children('#harga_satuan').text();
+            var id = parseInt($(this).closest('.productRow').attr('id').replace(/\D/g, ''));
+            var subtotal = harga_satuan * jumlah;
+            var tagSubtotal = $(this).closest('.productRow').attr('id');
+            $('#'+tagSubtotal).children('.total').text('Rp. ' + subtotal);
+            $.get("../controller/pilih.php?id=" + id + "&carting=change&amount=" + jumlah + "&price=" + subtotal, function(data, status){
+              var cart = JSON.parse(data);
+              alert("" + cart.produk + " Berhasil diubah."
+                // + "\nStatus: " + id
+              );
+              $('.keranjangHargaTotal').text(numberWithCommas(cart.harga));
+              $('#subTotalKeranjang').text(numberWithCommas(cart.harga));
+              $('#hargaTotalKeranjang').text(
+                numberWithCommas(parseInt($('#subTotalKeranjang').text().replace(/\D/g, '')) + parseInt(5000))
+              );
+            });
+          });
+          // END dari table keranjang perubahan jumlah paket
+          // remove produk dari keranjang
+          $('.product-remove').click(function() {
+            var id = $(this).parent('.productRow').attr('id')[0];
+            $.get('../controller/pilih.php?id=' + id + '&carting=remove', function(data, status) {
+              var cart = JSON.parse(data);
+              $('.keranjangHargaTotal').text(numberWithCommas(cart.harga));
+              $('#subTotalKeranjang').text(numberWithCommas(cart.harga));
+              $('#hargaTotalKeranjang').text('Rp. ' + numberWithCommas(parseInt(cart.harga) + parseInt(5000)));
+              $('#' + id + 'produkShow').remove();
+            });
+          });
+          // END dari remove produk dari keranjang
+          // set harga total keranjang pada halaman keranjang
+          $('#hargaTotalKeranjang').text(numberWithCommas(
+            parseInt($('#subTotalKeranjang').text().replace(/\D/g, '')) + parseInt(5000))
+          );
+          // END dari set harga total keranjang pada halaman keranjang
+          // POST buat Pesanan
+          $('.checkout').click(function() {
+            $.post('../controller/pesan.php?id=<?=$_SESSION['id'];?>', {
+              ongkir: 5000,
+              total: $('#hargaTotalKeranjang').text().replace(/\D/g, ''),
+              status: "Dalam Urutan",
+              lunas: 0},
+              function(data) {
+                var response = JSON.parse(data);
+                alert(response.pesan);
+                window.location = "?page=history";
+              });
+          });
+          console.log("yolah hide");
+          $('.produkRowCard').hide();
+          $('.buttonProdukCard').click(function() {
+            var ini = $(this).parent('.buttonModal').parent('.transaksiRow').attr('id');
+            $('#'+ini).children('.waktuTanggal').hide();
+            $('#'+ini).children('.buttonModal').hide();
+            $('#'+ini).children('.biayaOngkir').hide();
+            $('#'+ini).children('.totalBiaya').hide();
+            $('#'+ini).children('.statusPesanan').hide();
+            $('#'+ini).children('.lunasTransaksi').hide();
+            $('#'+ini).children('.produkRowCard').show();
+          });
+          $('.hideProdukRowRow').click(function() {
+            var ini = $(this).parent('.row').parent('.container').parent('.produkRowCard').parent('.transaksiRow').attr('id');
+            $('#'+ini).children('.waktuTanggal').show();
+            $('#'+ini).children('.buttonModal').show();
+            $('#'+ini).children('.biayaOngkir').show();
+            $('#'+ini).children('.totalBiaya').show();
+            $('#'+ini).children('.statusPesanan').show();
+            $('#'+ini).children('.lunasTransaksi').show();
+            $('#'+ini).children('.produkRowCard').hide();
+          });
       });
+      function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      }
       var check = function() {
         if (document.getElementById('password').value == document.getElementById('password2').value) {
           document.getElementById('registerBtn').disabled = false;

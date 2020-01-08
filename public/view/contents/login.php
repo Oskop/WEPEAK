@@ -24,11 +24,14 @@ style="background: -webkit-linear-gradient(left, #3931af, #00c6ff);
                 <div class="row register-form">
                     <div class="col-md-9">
                       <div class="form-group">
-                        <input type="text" class="form-control" name="username" placeholder="Username *" value="" />
+                        <input type="text" class="form-control" name="username" placeholder="Username *" value="" required="true" />
                         <!-- <input type="hidden" name="role" value="pelanggan"> -->
                       </div>
                       <div class="form-group">
-                        <input type="password" name="password" id="password1" class="form-control" placeholder="Password *"  value="" data-toggle="popover" title="Validasi Password" data-content="Harus berisikan paling tidak 1 angka, 1 huruf besar dan satu huruf kecil dan panjang karakter tidak boleh kurang dari 8" />
+                        <input type="password" name="password" id="password1" class="form-control" placeholder="Password *"  value=""
+                        data-toggle="popover" title="Validasi Password"
+                        data-content="Harus berisikan paling tidak 1 angka, 1 huruf besar dan satu huruf kecil dan panjang karakter tidak boleh kurang dari 8"
+                        required="true" />
                       </div>
                       <div class="form-group">
                         <small><a style="color:white;" href="?reset=password" value="">

@@ -43,7 +43,7 @@ class Pengguna
     try {
       $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
       $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      if (isset($id)) {
+      if (isset($this->id)) {
         $users = $con->prepare("SELECT * FROM wepeak.users WHERE id = :id AND delete_at IS NULL");
         $users->bindParam(':id', $this->id);
         $users->execute();
@@ -53,7 +53,7 @@ class Pengguna
         return $result;
       } else {
         $error = "Ada kesalahan. Disarankan untuk mode debugging";
-        echo "Ada kesalahan. Disarankan untuk mode debugging";
+        // echo "Ada kesalahan. Disarankan untuk mode debugging";
         return $error;
       }
       $con = null;

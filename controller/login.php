@@ -15,15 +15,31 @@ require_once '../model/pengguna.php';
     // $pengguna->jawaban = htmlspecialchars(strip_tags($_POST['jawaban']));
     // $pengguna->role = htmlspecialchars(strip_tags($_POST['role']));
     $jadi = $pengguna->login();
-    if ($jadi) {
-      $_SESSION['id'] = $jadi['id'];
-      $_SESSION['username'] = $jadi['username'];
-      $_SESSION['foto'] = $jadi['foto'];
-      $_SESSION['role'] = $jadi['role'];
-      $_SESSION['status'] = true;
-      // var_dump($jadi);die;
-      echo '<script>alert("Anda Berhasil Melakukan Pendaftaran")</script>';
-      echo "<script>window.location = '../public/?page=cart';</script>";
+    // var_dump($jadi);die;
+    if (isset($jadi)) {
+    // var_dump($jadi);die;
+      if ($pengguna->password == $jadi[0]['password']) {
+        // echo "true\n";
+        // echo $pengguna->password . "\n" . $jadi[0]['password'];
+        // die;
+        $_SESSION['id'] = $jadi[0]['id'];
+        $_SESSION['username'] = $jadi[0]['username'];
+        $_SESSION['foto'] = $jadi[0]['foto'];
+        $_SESSION['role'] = $jadi[0]['role'];
+        $_SESSION['status'] = true;
+        // var_dump($jadi);die;
+        echo '<script>alert("Anda Sudah Login")</script>';
+        echo "<script>window.location = '../public/?page=cart';</script>";
+      } else {
+        // echo $pengguna->password . "\n" . $jadi[0]['password'];
+        // echo "false";die;
+        echo '<script>alert("Username atau password salah! Coba Lagi!")</script>';
+        // echo "<script>window.location = '../public/?page=login';</script>";
+        echo "<script>window.history.back();</script>";
+      }
+    } else {
+      echo '<script>alert("User tidak ditemukan")</script>';
+      echo "<script>window.location = '../public/?page=login';</script>";
     }
 
   }

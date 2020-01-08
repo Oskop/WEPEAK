@@ -133,6 +133,49 @@ if (isset($_SESSION['status'])) {
         $('#toast-container').remove();
       }, 3000);
     }
+    $('.showProdukDashboard').hide();
+    $('.buttonShowProdukDashboard').click(function() {
+      var ini = $(this).parent('.buttonProdukDashboard').parent('.produkDashboardRow').attr('id');
+      $('#'+ini).children('.namaOrangDashboard').hide();
+      $('#'+ini).children('.alamatDashboard').hide();
+      $('#'+ini).children('.statusPesananDashboard').hide();
+      $('#'+ini).children('.totalBiayaDashboard').hide();
+      $('#'+ini).children('.buttonProdukDashboard').hide();
+      $('#'+ini).children('.showProdukDashboard').show();
+    });
+    $('.hideProdukDashboard').click(function() {
+      var ini = $(this).parent('.row').parent('.container').parent('.showProdukDashboard').parent('.produkDashboardRow').attr('id');
+      $('#'+ini).children('.namaOrangDashboard').show();
+      $('#'+ini).children('.alamatDashboard').show();
+      $('#'+ini).children('.statusPesananDashboard').show();
+      $('#'+ini).children('.totalBiayaDashboard').show();
+      $('#'+ini).children('.buttonProdukDashboard').show();
+      $('#'+ini).children('.showProdukDashboard').hide();
+    });
+    // Handler Bagian Select Status
+    $('.showPilihanStatus').hide();
+    $('.triggerUbahStatus').click(function() {
+      // console.log('diklik');
+      var ini = $(this).parent('.statusPesananDashboard').attr('id');
+      $('#'+ini).children('.showPilihanStatus').show();
+      $(this).hide();
+    });
+    $('.selectPilihanStatus').change(function () {
+      var ini = $(this).attr('id');
+      var ortu = $(this).parent('.showPilihanStatus').parent('.statusPesananDashboard').attr('id');
+      var id = ini.replace(/\D/g, '');
+      var ubahan = $('#'+ini).val();
+      console.log(id);
+      $.get("../controller/ubah_status.php?id=" + id + "&status=" + ubahan, function(data, status){
+        var ya = JSON.parse(data);
+        alert("" + ya.pesan + " menjadi " + ya.status);
+        // + "\nStatus: " + id
+        console.log('terubah ' + ya);
+        $('#'+ortu).children('.triggerUbahStatus').text(ubahan);
+      });
+      $('#'+ortu).children('.showPilihanStatus').hide();
+      $('#'+ortu).children('.triggerUbahStatus').show();
+    });
   });
 </script>
 </body>

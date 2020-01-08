@@ -32,31 +32,58 @@
 
     <div class="collapse navbar-collapse" id="ftco-nav">
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item active"><a href="." class="nav-link">Beranda</a></li>
-        <li class="nav-item dropdown">
+        <li class="nav-item
+				<?php if (!isset($_GET['page'])): ?>
+					<?="active";?>
+				<?php endif; ?>
+				"><a href="." class="nav-link">Beranda</a></li>
+        <!-- <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Belanja</a>
           <div class="dropdown-menu" aria-labelledby="dropdown04">
-          	<a class="dropdown-item" href="<?='?page=shop';?>">Belanja</a>
-            <a class="dropdown-item" href="<?='cart.html';?>">Keranjang</a>
+          	<a class="dropdown-item" href="<?//='?page=shop';?>">Belanja</a>
+            <a class="dropdown-item" href="<?//='?page=cart';?>">Keranjang</a>
           </div>
-        </li>
-        <li class="nav-item"><a href="<?='?page=about';?>" class="nav-link">Tentang</a></li>
-        <li class="nav-item"><a href="<?='?page=contact';?>" class="nav-link">Kontak</a></li>
-        <li class="nav-item cta cta-colored"><a href="<?='?page=cart';?>" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
+        </li> -->
+        <li class="nav-item
+				<?php if ($_GET['page'] == "shop"): ?>
+					<?="active";?>
+				<?php endif; ?>
+				"><a href="<?='?page=shop';?>" class="nav-link">Belanja</a></li>
+        <li class="nav-item
+				<?php if ($_GET['page'] == "about"): ?>
+					<?="active";?>
+				<?php endif; ?>
+				"><a href="<?='?page=about';?>" class="nav-link">Tentang</a></li>
+        <li class="nav-item
+				<?php if ($_GET['page'] == "contact"): ?>
+					<?="active";?>
+				<?php endif; ?>
+				"><a href="<?='?page=contact';?>" class="nav-link">Kontak</a></li>
+        <li class="nav-item
+				<?php if ($_GET['page'] == "cart"): ?>
+					<?="active";?>
+				<?php endif; ?>
+				cta cta-colored"><a href="<?='?page=cart';?>" id="countItem" class="nav-link"><span class="icon-shopping_cart"></span>[Rp. <span class="keranjangHargaTotal"><?php if(isset($_SESSION['total'])){echo
+					number_format($_SESSION['total'], 0, ',', '.')
+					;} else {echo "0";};?></span>]</a></li>
 				<li class="nav-item dropdown">
 					<a href="<?php if (isset($_SESSION['status'])) {
 						echo "?page=account";
 					} else {
 						echo "?page=login";
 					}?>" class="nav-link">Akun</a>
-					<div class="dropdown-menu" aria-labelledby="dropdown05">
-						<?php if (!isset($_SESSION['loggedin'])): ?>
-							<a class="dropdown-item" href="<?='?page=login';?>">Masuk</a>
-							<a class="dropdown-item" href="<?='?page=register';?>">Daftar</a>
+						<?php if (!isset($_SESSION['status'])): ?>
+							<div class="dropdown-menu" aria-labelledby="dropdown05">
+								<a class="dropdown-item" href="<?='?page=login';?>">Masuk</a>
+								<a class="dropdown-item" href="<?='?page=register';?>">Daftar</a>
+							</div>
 							<?php else: ?>
-
+								<div class="dropdown-menu" aria-labelledby="dropdown05">
+									<a class="dropdown-item" href="<?='?page=profile';?>">Profil</a>
+									<a class="dropdown-item" href="<?='?page=history';?>">Riwayat</a>
+									<a class="dropdown-item" href="<?='?page=logout';?>">Logout</a>
+								</div>
 						<?php endif; ?>
-					</div>
 				</li>
 
       </ul>
