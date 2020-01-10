@@ -86,7 +86,7 @@
             // alert('data' + id + "terpilih");
             $.get("../controller/pilih.php?id=" + id + "&carting=add", function(data, status){
               var cart = JSON.parse(data); var count;
-              alert("" + data + " dimasukkan ke dalam keranjang "
+              alert("" + cart.produk + " dimasukkan ke dalam keranjang "
               // + "\nStatus: " + id
             );
               // cart.forEach(function (item, index) {

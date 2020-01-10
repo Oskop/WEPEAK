@@ -58,7 +58,7 @@ style="background: -webkit-linear-gradient(left, #3931af, #00c6ff);
                     <!-- Tahap Reset Password -->
                     <div class="col-md-6" id="formResetPasswordBaru">
                       <div class="form-group">
-                        <textarea name="name" rows="6" cols="50" disabled class="p-3">Alamat: <?=$profil['alamat'];?></textarea>
+                        <textarea name="name" rows="5" cols="20" disabled class="p-3">Alamat: <?=$profil['alamat'];?></textarea>
                       </div>
                     </div>
                 </div>

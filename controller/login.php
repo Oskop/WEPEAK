@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once '../model/pengguna.php';
+require_once '../model/log.php';
+$log = new Log();
   if (isset($_POST['login'])) {
     $pengguna = new Pengguna();
 
@@ -29,6 +31,10 @@ require_once '../model/pengguna.php';
         $_SESSION['status'] = true;
         // var_dump($jadi);die;
         echo '<script>alert("Anda Sudah Login")</script>';
+        $log->id_user = $_SESSION['id'];
+        $log->module = "users";
+        $log->action = "login Public";
+        $log->insert_log();
         echo "<script>window.location = '../public/?page=cart';</script>";
       } else {
         // echo $pengguna->password . "\n" . $jadi[0]['password'];

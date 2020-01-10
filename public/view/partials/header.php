@@ -80,6 +80,9 @@
 							<?php else: ?>
 								<div class="dropdown-menu" aria-labelledby="dropdown05">
 									<a class="dropdown-item" href="<?='?page=profile&id=' . $_SESSION['id'];?>">Profil</a>
+									<?php if ($_SESSION['role'] == "admin"): ?>
+										<a class="dropdown-item" href="../view/">Admin</a>
+									<?php endif; ?>
 									<a class="dropdown-item" href="<?='?page=history';?>">Riwayat</a>
 									<a class="dropdown-item" href="<?='?page=logout';?>">Logout</a>
 								</div>

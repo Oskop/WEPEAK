@@ -1,5 +1,6 @@
 <?php
 require_once '../model/pengguna.php';
+require_once '../model/log.php';
   if (isset($_POST['register'])) {
     $pengguna = new Pengguna();
     $pengguna->nama = htmlspecialchars(strip_tags($_POST['nama']));
@@ -27,6 +28,11 @@ require_once '../model/pengguna.php';
     // }
     $pengguna->insert_pengguna();
     echo '<script>alert("Anda Berhasil Melakukan Pendaftaran");</script>';
+    $log = new Log();
+    $log->id_user = 0;
+    $log->module = "users"
+    $log->action = "register";
+    $log->insert_log();
     echo "<script>window.location = '../public/?page=login';</script>";
     // header('location: localhost/wepeak/?page=login');
   }

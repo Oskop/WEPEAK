@@ -1,6 +1,7 @@
 <?php
 require_once 'pdo_connection.php';
 require_once 'paket.php';
+
 /**
  *
  */
@@ -28,7 +29,12 @@ class Keranjang
     try {
       $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
       $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      $transaksi = $con->prepare("SELECT * FROM wepeak.transaksi WHERE delete_at IS NULL");
+      $transaksi = $con->prepare("SELECT transaksi.id, transaksi.alamat, transaksi.ongkir, transaksi.total,transaksi.status, transaksi.lunas,
+                                  users.nama
+                                  FROM wepeak.transaksi
+                                  INNER JOIN users ON transaksi.id_user=users.id
+                                  WHERE transaksi.delete_at IS NULL
+                                  ORDER BY transaksi.created_at;");
       $transaksi->execute();
       // var_dump($transaksi);
       $result = $transaksi->fetchAll();
@@ -244,7 +250,28 @@ class Keranjang
       echo "Koneksi atau query bermasalah: ". $e->getMessage() . "<br/>";
       die();
     }
+  }
 
+  function ubahJadiLunas()
+  {
+    try {
+      $con = new PDO('mysql:host=localhost;dbname=wepeak', "root", '');
+      $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $query = "UPDATE wepeak.transaksi SET lunas=:lunas WHERE id = :id";
+      $statement = $con->prepare($query);
+      if (isset($this->id)) {
+        $statement->bindParam(':lunas', $this->lunas);
+        $statement->bindParam(':id', $this->id);
+        $statement->execute();
+        // var_dump($statement);die;
+        return "Berhasil Memasukkan Data";
+      } else {
+        return "Data tidak ada.";
+      }
+    } catch (\Exception $e) {
+      echo "Koneksi atau query bermasalah: ". $e->getMessage() . "<br/>";
+      die();
+    }
   }
 
   function delete_keranjang()

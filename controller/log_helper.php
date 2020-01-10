@@ -1,20 +1,14 @@
 <?php
 session_start();
+require_once '../model/log.php';
+$log = new Log();
 
-function login_validate()
-{
-  $timeout = 60;
-  $_SESSION['expired_by'] = time() + $timeout;
-}
-
-function login_check()
-{
-  if (time() < $_SESSION['expired_by']) {
-    login_validate();
-    return true;
-  } else {
-    unset($_SESSION['expired_by']);
-    return false;
+if (isset($_SESSION['status'])) {
+  $log->id_user = $_SESSION['id'];
+  if (isset($_GET['module']) && isset($_GET['action'])) {
+    $log->module = $_GET['module'];
+    $log->action = $_GET['action'];
+    $log->insert_log();
   }
 }
 

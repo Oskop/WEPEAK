@@ -55,6 +55,18 @@ if (isset($_SESSION['status'])) {
                           <?php require_once 'contents/wadah.php'; ?>
                         <?php endif; ?>
 
+                      <?php elseif ($_GET['menu'] == "stokwadah"): ?>
+
+                        <?php if (isset($_GET['action'])): ?>
+                          <?php if ($_GET['action'] == "insert" OR $_GET['action'] == "update"): ?>
+                            <?php require_once 'contents/form_stokwadah.php'; ?>
+                          <?php elseif ($_GET['action'] == "delete"): ?>
+                            <?php require_once '../model/delete.php'; ?>
+                          <?php endif; ?>
+                          <?php else: ?>
+                          <?php require_once 'contents/stokwadah.php'; ?>
+                        <?php endif; ?>
+
                       <?php elseif ($_GET['menu'] == "satuan"): ?>
 
                         <?php if (isset($_GET['action'])): ?>
@@ -77,6 +89,16 @@ if (isset($_SESSION['status'])) {
                           <?php endif; ?>
                           <?php else: ?>
                           <?php require_once 'contents/paket.php'; ?>
+                        <?php endif; ?>
+
+                      <?php elseif ($_GET['menu'] == "transaksi"): ?>
+
+                        <?php if (isset($_GET['action'])): ?>
+                          <?php if ($_GET['action'] == "delete"): ?>
+                            <?php require_once '../model/delete.php'; ?>
+                          <?php endif; ?>
+                          <?php else: ?>
+                          <?php require_once 'contents/transaksi.php'; ?>
                         <?php endif; ?>
 
                       <?php endif; ?>
@@ -173,9 +195,38 @@ if (isset($_SESSION['status'])) {
         console.log('terubah ' + ya);
         $('#'+ortu).children('.triggerUbahStatus').text(ubahan);
       });
+      <?php if (isset($_SESSION['status'])): ?>
+      $.get("../controller/log_helper.php?id=" +
+            <?=$_SESSION['id'];?> + "&module=transaksi&action=update Status");
+      <?php endif; ?>
       $('#'+ortu).children('.showPilihanStatus').hide();
       $('#'+ortu).children('.triggerUbahStatus').show();
     });
+
+    // Handler Lunas Transaksi
+    $('.buttonLunas').click(function() {
+      var ini = $(this).attr('id')
+      var id = $(this).attr('id').replace(/\D/g, '');
+      // console.log(id);
+      var yakin = confirm("Yakin ini sudah Lunas?");
+      if (yakin) {
+        // alert("iYa DhonK");
+        $.get("../controller/ubah_status.php?id=" + id + "&status=lunas", function(data, status) {
+          var response = JSON.parse(data);
+          alert("" + response.pesan);
+          if (response.pesan == "Oke, Pesanan Dianggap Lunas.") {
+            $('#'+ini).parent('.buttonProdukDashboard').parent('.produkDashboardRow').remove();
+          }
+        });
+        <?php if (isset($_SESSION['status'])): ?>
+        $.get("../controller/log_helper.php?id=" +
+              <?=$_SESSION['id'];?> + "&module=transaksi&action=update Lunas");
+        <?php endif; ?>
+      } else {
+        alert("Lah buat apa pencet Lunas? Jangan alasan kepencet.");
+      }
+    });
+    $('.datatable').DataTable();
   });
 </script>
 </body>

@@ -1,5 +1,6 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/wepeak/model/satuan.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/wepeak/model/log.php';
  ?>
 
 <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
@@ -17,6 +18,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/wepeak/model/satuan.php';
               if (isset($_POST['update'])) {
                 $data = ['satuan' => $_POST['satuan']];
                 update_satuan($_GET['id'], $data);
+                $log = new Log();
+                $log->id_user = $_SESSION['id'];
+                $log->module = "satuan";
+                $log->action = "update satuan " . $_GET['id'];
+                $log->insert_log();
                 $_SESSION['flash'] = "Perubahan Data";
                 $_SESSION['flash_message'] = "Jenis air berhasil diperbaharui.";
                 $_SESSION['timer'] = time();
@@ -33,6 +39,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/wepeak/model/satuan.php';
               if (isset($_POST['save'])) {
                 $data = ['satuan' => $_POST['satuan']];
                 insert_satuan($data);
+                $log = new Log();
+                $log->id_user = $_SESSION['id'];
+                $log->module = "satuan";
+                $log->action = "insert";
+                $log->insert_log();
                 $_SESSION['flash'] = "Penambahan Data";
                 $_SESSION['flash_message'] = "Jenis air berhasil ditambahkan.";
                 $_SESSION['timer'] = time();

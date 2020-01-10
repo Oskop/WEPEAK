@@ -8,6 +8,14 @@
       Jenis Air
     <?php elseif ($_GET['menu'] == "wadah"): ?>
       Wadah
+    <?php elseif ($_GET['menu'] == "satuan"): ?>
+      Satuan
+    <?php elseif ($_GET['menu'] == "Paket"): ?>
+      Paket
+    <?php elseif ($_GET['menu'] == "stokwadah"): ?>
+      Stok Wadah
+    <?php elseif ($_GET['menu'] == "transaksi"): ?>
+      Transaksi
     <?php endif; ?>
   <?php else: ?>
     Dasbor Wepeak

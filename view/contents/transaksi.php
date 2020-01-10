@@ -2,9 +2,7 @@
 require_once '../model/keranjang.php';
 require_once '../model/pengguna.php';
 $keranjang = new Keranjang();
-$BelumLunas = $keranjang->get_keranjang_all_belum_lunas();
-$jumlahPesananSekarang = 0;
-$omset = 0; $jumlahProduk = 0;
+$BelumLunas = $keranjang->get_keranjang_all();
 foreach ($BelumLunas as $key => $value) {
   $keranjang->id = $value['id'];
   $idBarang = $keranjang->get_idbarang_pengguna();
@@ -17,11 +15,8 @@ foreach ($BelumLunas as $key => $value) {
                                     "jumlah" => $data['jumlah'],
                                     "subtotal" => $data['subtotal']
                                   ];
-    $jumlahProduk += $data['jumlah'];
   }
   $BelumLunas[$key]['produk'] = $products;
-  $omset += $value['total'];
-  $jumlahPesananSekarang += 1;
 }
 // var_dump($BelumLunas);die;
  ?>
@@ -32,8 +27,8 @@ foreach ($BelumLunas as $key => $value) {
                 <i class="pe-7s-monitor icon-gradient bg-mean-fruit">
                 </i>
             </div>
-            <div>Dasbor Utama
-                <div class="page-title-subheading">Halaman Ringkasan Data WEPEAK.
+            <div>Riwayat Transaksi
+                <div class="page-title-subheading">Halaman Riwayat Transaksi WEPEAK.
                 </div>
             </div>
         </div>
@@ -42,16 +37,16 @@ foreach ($BelumLunas as $key => $value) {
       </div>
 </div>
 
-<div class="row">
+<!-- <div class="row">
     <div class="col-md-6 col-xl-4">
         <div class="card mb-3 widget-content bg-midnight-bloom">
             <div class="widget-content-wrapper text-white">
                 <div class="widget-content-left">
                     <div class="widget-heading">Jumlah Pesanan</div>
-                    <div class="widget-subheading">Pesanan Belum Tuntas</div>
+                    <div class="widget-subheading">Pesanan Hari Ini</div>
                 </div>
                 <div class="widget-content-right">
-                    <div class="widget-numbers text-white"><span><?=$jumlahPesananSekarang;?></span></div>
+                    <div class="widget-numbers text-white"><span>1896</span></div>
                 </div>
             </div>
         </div>
@@ -60,11 +55,11 @@ foreach ($BelumLunas as $key => $value) {
         <div class="card mb-3 widget-content bg-arielle-smile">
             <div class="widget-content-wrapper text-white">
                 <div class="widget-content-left">
-                    <div class="widget-heading">Jumlah Produk</div>
-                    <div class="widget-subheading">Produk Belum Dibuat</div>
+                    <div class="widget-heading">Stok Wadah</div>
+                    <div class="widget-subheading">Semua Jenis Wadah</div>
                 </div>
                 <div class="widget-content-right">
-                    <div class="widget-numbers text-white"><span><?=$jumlahProduk;?></span></div>
+                    <div class="widget-numbers text-white"><span>568</span></div>
                 </div>
             </div>
         </div>
@@ -73,16 +68,16 @@ foreach ($BelumLunas as $key => $value) {
         <div class="card mb-3 widget-content bg-grow-early">
             <div class="widget-content-wrapper text-white">
                 <div class="widget-content-left">
-                    <div class="widget-heading">Tagihan</div>
-                    <div class="widget-subheading">Belum Bayar</div>
+                    <div class="widget-heading">Omset</div>
+                    <div class="widget-subheading">Pendapatan Kotor</div>
                 </div>
                 <div class="widget-content-right">
-                    <div class="widget-numbers text-white"><span>Rp. <?=number_format($omset, 0, ',', '.');?></span></div>
+                    <div class="widget-numbers text-white"><span>Rp. 30000</span></div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <div class="row">
     <!-- <div class="col-md-6 col-xl-4">
         <div class="card mb-3 widget-content">
@@ -159,18 +154,18 @@ foreach ($BelumLunas as $key => $value) {
         <div class="main-card mb-3 card">
             <div class="card-header">Active Users
                 <div class="btn-actions-pane-right">
-                    <div role="group" class="btn-group-sm btn-group">
-                        <!-- <button class="active btn btn-focus">Last Week</button>
-                        <button class="btn btn-focus">All Month</button> -->
-                    </div>
+                    <!-- <div role="group" class="btn-group-sm btn-group">
+                        <button class="active btn btn-focus">Last Week</button>
+                        <button class="btn btn-focus">All Month</button>
+                    </div> -->
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                <table class="align-middle mb-0 table table-borderless table-striped table-hover datatable">
                     <thead>
                     <tr>
                         <th class="text-center">#</th>
-                        <th>Nama</th>
+                        <th class="text-center">Nama</th>
                         <th class="text-center">Alamat</th>
                         <th class="text-center">Status</th>
                         <th class="text-center">Total Biaya</th>
@@ -192,7 +187,7 @@ foreach ($BelumLunas as $key => $value) {
                                   </div>
                                 </div>
                                 <div class="widget-content-left flex2">
-                                  <div class="widget-heading"><?=$value['nama'];?></div>
+                                  <div class="widget-heading text-left"><?=$value['nama'];?></div>
                                   <!-- <div class="widget-subheading opacity-7">Web Developer</div> -->
                                 </div>
                               </div>
@@ -200,7 +195,7 @@ foreach ($BelumLunas as $key => $value) {
                           </td>
                           <td class="text-center alamatDashboard"><?=$value['alamat'];?></td>
                           <td class="text-center statusPesananDashboard" id="<?=$value['id'];?>statusPesananDashboard">
-                            <div class="badge badge-warning triggerUbahStatus"><?=$value['status'];?></div>
+                            <div class="badge badge-warning"><?=$value['status'];?></div>
                             <!-- Dropdown mengubah status -->
                             <div class="showPilihanStatus">
                               <select class="custom-select btn btn-warning selectPilihanStatus"
@@ -215,12 +210,14 @@ foreach ($BelumLunas as $key => $value) {
                               </select>
                             </div>
                           </td>
-                          <td class="text-center totalBiayaDashboard">Rp. <?=number_format($value['total'], 0, ',', '.');?></td>
+                          <td class="text-center totalBiayaDashboard"><?="Rp. ".number_format($value['total'], 0, ',', '.');?></td>
                           <td class="text-center buttonProdukDashboard">
                             <button type="button" id="<?=$value['id'];?>buttonShowProdukDashboard" class="btn btn-primary btn-sm
                               buttonShowProdukDashboard">Details</button>
-                            <a href="#" type="button" id="<?=$value['id'];?>Lunas"
-                              class="btn btn-success buttonLunas">Lunas</a>
+                              <?php if ($value['lunas'] == 0): ?>
+                                <a href="#" type="button" id="<?=$value['id'];?>Lunas"
+                                  class="btn btn-success buttonLunas">Lunas</a>
+                              <?php endif; ?>
                           </td>
 
                           <!-- Load Semua Produk Pada ID Keranjang -->

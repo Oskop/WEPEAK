@@ -113,18 +113,23 @@
                             </a>
                         </li>
                         <li>
-                            <a href="components-tabs.html">
-                                <i class="metismenu-icon">
-                                </i>Stok
+                          <a href="index.php?menu=stokwadah"
+                          <?php if (isset($_GET['menu'])):
+                          if ($_GET['menu'] == "stokwadah"): ?>
+                            class="mm-active"
+                          <?php endif;endif; ?>
+                          >
+                              <i class="metismenu-icon">
+                              </i>Stok
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="app-sidebar__heading">Statistik</li>
                 <li>
-                    <a href="dashboard-boxes.html">
+                    <a href="index.php?menu=transaksi">
                         <i class="metismenu-icon pe-7s-display2"></i>
-                        Penjualan Air
+                        Riwayat Transaksi
                     </a>
                 </li>
             </ul>

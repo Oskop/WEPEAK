@@ -1,5 +1,12 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/wepeak/model/wadah.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/wepeak/model/stokwadah.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/wepeak/model/log.php';
+$wadah = get_wadah_all();
+if (isset($_GET['id'])) {
+  $stokwadah = get_stokwadah_once($_GET['id']);
+  // var_dump($stokwadah);
+}
  ?>
 
 <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
@@ -15,63 +22,66 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/wepeak/model/wadah.php';
 
               }
               if (isset($_POST['update'])) {
-                $data = ['jenis' => $_POST['jenis'],
-                         'isi' => $_POST['isi'],
-                         'harga' => $_POST['harga']
+                $data = ['id_wadah' => $_POST['id_wadah'],
+                         'jumlah' => $_POST['jumlah']
                        ];
-                update_wadah($_GET['id'], $data);
+                update_stokwadah($_GET['id'], $data);
                 $log = new Log();
                 $log->id_user = $_SESSION['id'];
-                $log->module = "wadah";
-                $log->action = "update wadah " . $_GET['id'];
+                $log->module = "stokwadah";
+                $log->action = "update " . $_GET['id'];
                 $log->insert_log();
                 $_SESSION['flash'] = "Perubahan Data";
                 $_SESSION['flash_message'] = "Jenis Wadah berhasil diperbaharui.";
                 $_SESSION['timer'] = time();
-                echo "<script>var time = setTimeout(function()
-                      {window.location = 'index.php?menu=wadah'}, 0);</script>";
+                echo "<script>window.location = 'index.php?menu=stokwadah';</script>";
                 // echo "<script>document
                 //       .getElementById('formAir')
                 //       .addEventListener('submit', function(e) {
                 //         e.preventDefault();
-                //         window.location = '$base_url_admin" . "index.php?menu=jenis_air" . "';});</script>";
+                //         window.location = '$base_url_admin" . "index.php?menu=id_wadah_air" . "';});</script>";
               }
 
 
               if (isset($_POST['save'])) {
-                $data = ['jenis' => $_POST['jenis'],
-                         'isi' => $_POST['isi'],
-                         'harga' => $_POST['harga']
+                $data = ['id_wadah' => $_POST['id_wadah'],
+                         'jumlah' => $_POST['jumlah']
                        ];
-                insert_wadah($data);
+                insert_stokwadah($data);
                 $log = new Log();
                 $log->id_user = $_SESSION['id'];
-                $log->module = "wadah";
+                $log->module = "stokwadah";
                 $log->action = "insert";
                 $log->insert_log();
                 $_SESSION['flash'] = "Penambahan Data";
                 $_SESSION['flash_message'] = "Jenis air berhasil ditambahkan.";
                 $_SESSION['timer'] = time();
                 echo "<script>var time = setTimeout(function()
-                      {window.location = 'index.php?menu=wadah'}, 0);</script>";
+                      {window.location = 'index.php?menu=stokwadah'}, 0);</script>";
               }
                ?>
 
               <form class="" method="post" id="formAir" action="">
-                <div class="position-relative form-group"><label for="jenis" class="">Jenis</label><input name="jenis" id="jenis" placeholder="Nama Jenis Air" type="jenis" class="form-control"
+                <div class="position-relative form-group"><label for="id_wadah"
+                  class="">Jenis Wadah</label>
+                  <select class="form-control" name="id_wadah">
+                    <?php if (isset($_GET['id'])): ?>
+                      <option value="<?=$stokwadah[0]['id_wadah'];?>"
+                      selected disabled><?=$stokwadah[0]['nama'] . " " . $stokwadah[0]['isi'];?></option>
+                      <?php else: ?>
+                        <option value="kosong" selected>Pilih Jenis Wadah</option>
+                        <?php foreach ($wadah as $key => $value): ?>
+                          <option value="<?=$value['id'];?>"><?=$value['jenis'] . " " . $value['isi'];?></option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                  </select>
+                <div class="position-relative form-group"><label for="jumlah" class="mt-3">Jumlah</label>
+                  <input name="jumlah" id="jumlah"
+                  placeholder="" type="number" class="form-control" required
                   <?php if (isset($_GET['id'])) {
-                    echo "value='" . $data[0]['jenis'] . "'";
+                    echo "value='" . $stokwadah[0]['jumlah'] . "'";
                   } ?>
                   ></div>
-                <div class="position-relative form-group"><label for="isi" class="">Isi</label><input name="isi" id="isi"
-                  placeholder="Kapasitas jenis wadah" type="isi" class="form-control"
-                  <?php if (isset($_GET['id'])) {
-                    echo "value='" . $data[0]['isi'] . "'";
-                  } ?>
-                  ></div>
-                <div class="position-relative form-group"><label for="harga" class="">Harga</label><textarea name="harga" id="harga" class="form-control"><?php if (isset($_GET['id'])) {
-                    echo trim($data[0]['harga'], " ");
-                  } ?></textarea></div>
                 <!-- <button class="mt-1 btn btn-primary">Submit</button> -->
                 <?php if (isset($_GET['id'])) {
                   echo "<input type=\"submit\" name=\"update\" value=\"Ubah\" class=\"mt-1 btn btn-primary\">";

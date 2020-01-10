@@ -72,7 +72,7 @@ foreach ($riwayat as $key => $value) {
                     <td class="statusPesanan"><h5><?=$value['status'];?></h5></td>
 
                     <td class="lunasTransaksi"><?php if($value['lunas'] == 0){echo "Belum";}else{echo "Sudah";} ?></td>
-                    <td class="produkRowCard" id="<?=$value['id'];?>produkRowCard">
+                    <td class="produkRowCard" colspan="5" id="<?=$value['id'];?>produkRowCard">
                       <div class="container">
                         <div class="row">
                           <?php foreach ($riwayat[$key]['produk'] as $keye => $data): ?>
