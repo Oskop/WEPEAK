@@ -1,6 +1,13 @@
 <?php
-session_start();
-require_once '../model/log.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/WEPEAK/model/log.php';
+if (!isset($_SESSION)) {
+  // code...
+  session_start();
+} else {
+  if (isset($_SESSION['role'])) {
+    // code...
+  }
+}
 $log = new Log();
 
 if (isset($_SESSION['status'])) {

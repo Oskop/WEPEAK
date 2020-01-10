@@ -26,14 +26,14 @@ if (isset($_POST)) {
       $keranjang->jumlah = $value['jumlah'];
       $keranjang->subtotal = $value['harga'];
       $keranjang->insert_barang();
-      $log->id_user = $_SESSION['id']
-      $log->module = "detail_transaksi"
+      $log->id_user = $_SESSION['id'];
+      $log->module = "detail_transaksi";
       $log->action = "insert paket " . $key;
       $log->insert_log();
     }
     $_SESSION['keranjang'] = null;$_SESSION['total'] = 0;
     $log->id_user = $_SESSION['id'];
-    $log->module = "transaksi"
+    $log->module = "transaksi";
     $log->action = "insert Pesanan";
     $log->insert_log();
     echo json_encode(["pesan" => "Pesanan telah dibuat. Silahkan Tunggu dan Bayar saat barang sudah diterima."]);

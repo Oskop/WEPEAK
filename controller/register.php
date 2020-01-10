@@ -3,16 +3,16 @@ require_once '../model/pengguna.php';
 require_once '../model/log.php';
   if (isset($_POST['register'])) {
     $pengguna = new Pengguna();
-    $pengguna->nama = htmlspecialchars(strip_tags($_POST['nama']));
-    $pengguna->email = htmlspecialchars(strip_tags($_POST['email']));
-    $pengguna->no_hp = htmlspecialchars(strip_tags($_POST['no_hp']));
-    $pengguna->alamat = htmlspecialchars(strip_tags($_POST['alamat']));
-    $pengguna->gender = htmlspecialchars(strip_tags($_POST['gender']));
-    $pengguna->username = htmlspecialchars(strip_tags($_POST['username']));
-    $pengguna->password = hash('sha512', htmlspecialchars(strip_tags($_POST['password'])));
-    $pengguna->pertanyaan = htmlspecialchars(strip_tags($_POST['pertanyaan']));
-    $pengguna->jawaban = htmlspecialchars(strip_tags($_POST['jawaban']));
-    $pengguna->role = htmlspecialchars(strip_tags($_POST['role']));
+    $pengguna->nama = $_POST['nama'];
+    $pengguna->email = $_POST['email'];
+    $pengguna->no_hp = $_POST['no_hp'];
+    $pengguna->alamat = $_POST['alamat'];
+    $pengguna->gender = $_POST['gender'];
+    $pengguna->username = $_POST['username'];
+    $pengguna->password = hash('sha512', $_POST['password']);
+    $pengguna->pertanyaan = $_POST['pertanyaan'];
+    $pengguna->jawaban = $_POST['jawaban'];
+    $pengguna->role = $_POST['role'];
 
     // if (!preg_match("/^[a-zA-Z ]*$/",$pengguna->nama)) {
     //   echo '<script>alert("Nama hanya boleh berisikan huruf");return false;</script>';
@@ -30,7 +30,7 @@ require_once '../model/log.php';
     echo '<script>alert("Anda Berhasil Melakukan Pendaftaran");</script>';
     $log = new Log();
     $log->id_user = 0;
-    $log->module = "users"
+    $log->module = "users";
     $log->action = "register";
     $log->insert_log();
     echo "<script>window.location = '../public/?page=login';</script>";

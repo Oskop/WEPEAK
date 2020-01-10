@@ -103,7 +103,7 @@ class Pengguna
       $statement->bindParam(':gender', $this->gender);
       $statement->bindParam(':no_hp', $this->no_hp);
       $statement->bindParam(':username', $this->username);
-      $statement->bindParam(':password', hash('sha512', $this->password));
+      $statement->bindParam(':password', $this->password);
       $statement->bindParam(':email', $this->email);
       $statement->bindParam(':role', $this->role);
       $statement->bindParam(':pertanyaan', $this->pertanyaan);
@@ -124,7 +124,7 @@ class Pengguna
       // } else {
       //   $statement->bindParam(':foto', htmlspecialchars(strip_tags("user.jpg")));
       // }
-      var_dump($this->nama);die;
+      // var_dump(hash("sha512",$this->password));die;
       $statement->execute();
       return "<script>location: 'localhost/wepeak/public/'</script>";
     } catch (\Exception $e) {
